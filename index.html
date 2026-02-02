@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Valentine?</title>
+  <meta name="theme-color" content="#6A1415" />
+
+  <!-- Fonts: editorial + pixel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --wine: #6A1415;
+      --wine2:#8B2C27;
+      --mist: #EFD9DE;
+      --cream:#F0EDE6;
+      --pop:  #F3312D;
+
+      --shadow: rgba(0,0,0,.35);
+      --radius: 18px;
+
+      --safe-top: env(safe-area-inset-top);
+      --safe-bot: env(safe-area-inset-bottom);
+
+      /* ✅ Put your collage image in the same folder as index.html and name it EXACTLY: collage.png */
+      --collage-url: url("collage.png");
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      color: var(--cream);
+      font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      overflow-x:hidden;
+      position: relative;
+
+      /* fallback base if collage doesn't load */
+      background:
+        radial-gradient(1200px 700px at 50% 20%, rgba(243,49,45,.20), transparent 60%),
+        radial-gradient(900px 600px at 30% 80%, rgba(239,217,222,.12), transparent 55%),
+        linear-gradient(180deg, #520D0E 0%, var(--wine) 40%, #7A1A18 100%);
+    }
+
+    /* ✅ Collage background layer (dimmed) */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      background-image: var(--collage-url);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      opacity: .28;                 /* increase if you want collage stronger */
+      filter: saturate(1.05) contrast(1.08);
+      transform: scale(1.02);
+
+      z-index: 0;
+      pointer-events:none;
+    }
+
+    /* ✅ Dark veil to make text/icons pop */
+    body::after{
+      content:"";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(1100px 650px at 50% 30%, rgba(0,0,0,.08), rgba(0,0,0,.58)),
+        linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.44));
+      z-index: 1;
+      pointer-events:none;
+    }
+
+    /* Grain overlay (SVG noise) */
+    .grain::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.12;                  /* lower = cleaner */
+      mix-blend-mode: overlay;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      z-index: 2;
+    }
+
+    .wrap{
+      min-height:100%;
+      padding: calc(18px + var(--safe-top)) 16px calc(22px + var(--safe-bot));
+      display:flex;
+      justify-content:center;
+      position: relative;
+      z-index: 3;
+    }
+
+    .phone{
+      width:min(420px, 100%);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      opacity:.95;
+      font-size:12px;
+    }
+
+    .badge{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(239,217,222,.10);
+      border:1px solid rgba(239,217,222,.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .hearts{
+      font-family:"Press Start 2P", monospace;
+      font-size:12px;
+      letter-spacing:2px;
+      color: var(--mist);
+    }
+
+    .card{
+      position:relative;
+      border-radius: var(--radius);
+      background: rgba(240,237,230,.07);
+      border:1px solid rgba(239,217,222,.18);
+      box-shadow: 0 18px 60px var(--shadow);
+      overflow:hidden;
+      isolation: isolate;
+    }
+
+    /* clean inner tint so collage doesn't fight the content */
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(800px 500px at 30% 25%, rgba(239,217,222,.10), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.30));
+      z-index:0;
+      pointer-events:none;
+    }
+
+    /* subtle pixel grid like Minecraft UI (very light) */
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      opacity:.06;  /* keep subtle */
+      background:
+        linear-gradient(rgba(240,237,230,.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(240,237,230,.10) 1px, transparent 1px);
+      background-size: 14px 14px;
+      mix-blend-mode: overlay;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .cardInner{
+      padding:18px;
+      position:relative;
+      z-index:2;
+    }
+
+    .title{
+      font-family:"Playfair Display", serif;
+      font-weight:700;
+      font-size:36px;
+      line-height:1.02;
+      margin:0 0 10px;
+      letter-spacing:.01em;
+    }
+
+    .sub{
+      margin:0 0 16px;
+      color: rgba(240,237,230,.88);
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .divider{
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(239,217,222,.35), transparent);
+      margin: 14px 0;
+      opacity:.8;
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:10px;
+    }
+
+    button{
+      appearance:none;
+      border:0;
+      border-radius: 14px;
+      padding:14px 12px;
+      font: 700 13px/1 "Space Mono", monospace;
+      color: var(--cream);
+      cursor:pointer;
+      transition: transform .12s ease, filter .12s ease, background .12s ease;
+      min-height:48px;
+    }
+    button:active{ transform: scale(.98); }
+
+    .yes{
+      background: linear-gradient(180deg, var(--pop), #B21F22);
+      box-shadow: 0 14px 34px rgba(243,49,45,.22);
+    }
+    .no{
+      background: rgba(239,217,222,.10);
+      border:1px solid rgba(239,217,222,.25);
+    }
+    .no:hover{ filter: brightness(1.08); }
+
+    /* Wax seal */
+    .seal{
+      position:absolute;
+      right:14px;
+      top:14px;
+      width:64px;
+      height:64px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), transparent 55%),
+        radial-gradient(circle at 70% 75%, rgba(0,0,0,.25), transparent 60%),
+        linear-gradient(180deg, #8B2C27, #520D0E);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      border:1px solid rgba(239,217,222,.18);
+      display:grid;
+      place-items:center;
+      transform: rotate(8deg);
+      z-index:3;
+    }
+    .seal span{
+      font-family:"Playfair Display", serif;
+      font-weight:700;
+      color: rgba(240,237,230,.88);
+      font-size:18px;
+      letter-spacing:.02em;
+      transform: rotate(-8deg);
+      user-select:none;
+    }
+
+    /* ✅ Pixel hearts (Minecraft-y) */
+    .pixelRow{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+      opacity:.95;
+      align-items:center;
+    }
+
+    .pHeart{
+      --s: 3px;          /* pixel size */
+      --c: rgba(239,217,222,.75);
+      width: calc(var(--s) * 8);
+      height: calc(var(--s) * 7);
+      position: relative;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,.22));
+      transition: transform .14s ease, filter .14s ease;
+    }
+    .pHeart::before{
+      content:"";
+      position:absolute;
+      width: var(--s);
+      height: var(--s);
+      background: var(--c);
+      box-shadow:
+        /* row 0: .##..##. */
+        calc(var(--s) * 1) calc(var(--s) * 0) var(--c),
+        calc(var(--s) * 2) calc(var(--s) * 0) var(--c),
+        calc(var(--s) * 5) calc(var(--s) * 0) var(--c),
+        calc(var(--s) * 6) calc(var(--s) * 0) var(--c),
+
+        /* row 1: #######. */
+        calc(var(--s) * 0) calc(var(--s) * 1) var(--c),
+        calc(var(--s) * 1) calc(var(--s) * 1) var(--c),
+        calc(var(--s) * 2) calc(var(--s) * 1) var(--c),
+        calc(var(--s) * 3) calc(var(--s) * 1) var(--c),
+        calc(var(--s) * 4) calc(var(--s) * 1) var(--c),
+        calc(var(--s) * 5) calc(var(--s) * 1) var(--c),
+        calc(var(--s) * 6) calc(var(--s) * 1) var(--c),
+
+        /* row 2: ######## */
+        calc(var(--s) * 0) calc(var(--s) * 2) var(--c),
+        calc(var(--s) * 1) calc(var(--s) * 2) var(--c),
+        calc(var(--s) * 2) calc(var(--s) * 2) var(--c),
+        calc(var(--s) * 3) calc(var(--s) * 2) var(--c),
+        calc(var(--s) * 4) calc(var(--s) * 2) var(--c),
+        calc(var(--s) * 5) calc(var(--s) * 2) var(--c),
+        calc(var(--s) * 6) calc(var(--s) * 2) var(--c),
+        calc(var(--s) * 7) calc(var(--s) * 2) var(--c),
+
+        /* row 3: .######. */
+        calc(var(--s) * 1) calc(var(--s) * 3) var(--c),
+        calc(var(--s) * 2) calc(var(--s) * 3) var(--c),
+        calc(var(--s) * 3) calc(var(--s) * 3) var(--c),
+        calc(var(--s) * 4) calc(var(--s) * 3) var(--c),
+        calc(var(--s) * 5) calc(var(--s) * 3) var(--c),
+        calc(var(--s) * 6) calc(var(--s) * 3) var(--c),
+
+        /* row 4: ..####.. */
+        calc(var(--s) * 2) calc(var(--s) * 4) var(--c),
+        calc(var(--s) * 3) calc(var(--s) * 4) var(--c),
+        calc(var(--s) * 4) calc(var(--s) * 4) var(--c),
+        calc(var(--s) * 5) calc(var(--s) * 4) var(--c),
+
+        /* row 5: ...##... */
+        calc(var(--s) * 3) calc(var(--s) * 5) var(--c),
+        calc(var(--s) * 4) calc(var(--s) * 5) var(--c),
+
+        /* row 6: ....#... */
+        calc(var(--s) * 3.5) calc(var(--s) * 6) var(--c);
+      image-rendering: pixelated;
+    }
+
+    .pHeart.filled{ --c: rgba(243,49,45,.95); }
+    .pHeart.filled{
+      transform: translateY(-1px);
+      filter: drop-shadow(0 12px 18px rgba(243,49,45,.20));
+    }
+
+    .footerNote{
+      text-align:center;
+      font-size:12px;
+      opacity:.86;
+      margin-top:6px;
+    }
+
+    /* Modal */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding: 16px 16px calc(16px + var(--safe-bot));
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(6px);
+      z-index: 20;
+    }
+    .modal.open{ display:flex; }
+
+    .sheet{
+      width:min(420px, 100%);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(240,237,230,.12), rgba(240,237,230,.06));
+      border:1px solid rgba(239,217,222,.20);
+      box-shadow: 0 26px 80px rgba(0,0,0,.45);
+      overflow:hidden;
+      transform: translateY(14px);
+      opacity: 0;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+    .modal.open .sheet{
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .sheetHead{
+      padding:14px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background: rgba(0,0,0,.12);
+    }
+    .sheetHead h2{
+      margin:0;
+      font: 700 14px/1 "Space Mono", monospace;
+      letter-spacing:.04em;
+      color: rgba(240,237,230,.92);
+      text-transform: uppercase;
+    }
+    .close{
+      background: transparent;
+      border:1px solid rgba(239,217,222,.25);
+      padding:10px 12px;
+      border-radius: 12px;
+      min-height:auto;
+      font-weight:700;
+      color: var(--cream);
+    }
+    .sheetBody{ padding:16px; }
+
+    .bigYes{
+      font-family:"Playfair Display", serif;
+      font-weight:700;
+      font-size:28px;
+      margin:0 0 10px;
+    }
+
+    .idea{
+      margin:10px 0 0;
+      padding:12px 12px;
+      border-radius: 14px;
+      background: rgba(239,217,222,.10);
+      border:1px solid rgba(239,217,222,.18);
+      color: rgba(240,237,230,.9);
+      font-size:13px;
+      line-height:1.5;
+    }
+  </style>
+</head>
+
+<body class="grain">
+  <main class="wrap">
+    <section class="phone">
+      <div class="topbar">
+        <div class="badge">
+          <span class="hearts">♥ ♥ ♥</span>
+          <span>02/14/2026</span>
+        </div>
+        <div style="opacity:.75;">peoma</div>
+      </div>
+
+      <div class="card">
+        <div class="seal" aria-hidden="true"><span>★</span></div>
+
+        <div class="cardInner">
+         <p class="sub">
+            Hey Oma,
+            <br/>
+            <span style="opacity:.85;">(heyyyyyyy)</span>
+          </p>
+          <h1 class="title">Will you be my Valentine?</h1>
+
+          <div class="divider"></div>
+
+          <div class="actions">
+            <button class="yes" id="yesBtn">YES</button>
+            <button class="no" id="noBtn">Not this time</button>
+          </div>
+
+          <div class="pixelRow" aria-hidden="true" id="loveMeter">
+            <div class="pHeart filled"></div>
+            <div class="pHeart"></div>
+            <div class="pHeart"></div>
+            <div class="pHeart filled"></div>
+            <div class="pHeart"></div>
+            <div class="pHeart"></div>
+          </div>
+
+          <p class="footerNote">Made for iPhone ✦ tap-safe ✦ cozy</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal sheet -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Valentine response">
+    <div class="sheet">
+      <div class="sheetHead">
+        <h2 id="sheetTitle">Answer</h2>
+        <button class="close" id="closeBtn">Close</button>
+      </div>
+      <div class="sheetBody" id="sheetBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById("modal");
+    const sheetTitle = document.getElementById("sheetTitle");
+    const sheetBody = document.getElementById("sheetBody");
+
+    const openModal = (title, html) => {
+      sheetTitle.textContent = title;
+      sheetBody.innerHTML = html;
+      modal.classList.add("open");
+    };
+    const closeModal = () => modal.classList.remove("open");
+
+    document.getElementById("closeBtn").addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+    // Pixel heart meter fill
+    const hearts = Array.from(document.querySelectorAll("#loveMeter .pHeart"));
+    function fillHearts(){
+      hearts.forEach((h, i) => setTimeout(() => h.classList.add("filled"), i * 90));
+    }
+    function resetHearts(){
+      hearts.forEach(h => h.classList.remove("filled"));
+    }
+
+    document.getElementById("yesBtn").addEventListener("click", () => {
+      fillHearts();
+      openModal("YES 💘", `
+        <p class="bigYes">Yessssssssssss!</p>
+        <p style="margin:0; color:rgba(240,237,230,.9); line-height:1.55; font-size:14px;">
+          I mean...That's cool or whatever
+          <br/>(I'd love to be your Valentine, Oma!)
+        </p>
+
+        <div class="idea"><b>Btw...pick a meal:</b><br/>
+          • chicken parmesan pasta + icecream<br/>
+          • chicken stir fry + soda<br/>
+          • Pizza + icecream<br/>
+          ~ we'll have icecream with everything lol
+        </div>
+
+        <p style="margin:12px 0 0; opacity:.85; font-size:12px;">
+          Merci beaceeeeouuuuuuuuwww
+        </p>
+      `);
+    });
+
+    document.getElementById("noBtn").addEventListener("click", () => {
+      resetHearts();
+      openModal("STOP THE CAP, LOVE 💗 ", `
+        <p class="bigYes">Yes, I'll be your val!</p>
+        <p style="margin:0; color:rgba(240,237,230,.9); line-height:1.55; font-size:14px;">
+          I’m really glad I got to ask you. You’re awesome :)
+        </p>
+        <div class="idea">
+          Now go back and click "yes" thou lovely girfriend of mine 😏🫶🏽
+        </div>
+      `);
+    });
+
+    // Esc to close (desktop testing)
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+  </script>
+</body>
+</html>
